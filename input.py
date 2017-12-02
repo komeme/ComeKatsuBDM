@@ -51,6 +51,11 @@ def register_umbrella(room, nfc):
         sql = "insert into umbrellas (room_id, nfc_id, in_room) values (%s, %s, %s)"
         cursor.execute(sql, (room["id"], nfc["id"], True))
     connection.commit()
+    with connection.cursor() as cursor:
+        sql = "select * from umbrellas where nfc_id=%s"
+        cursor.execute(sql, (nfc["id"],))
+        umbrellas = cursor.fetchall()
+    print umbrellas[0]
 
 
 try:
