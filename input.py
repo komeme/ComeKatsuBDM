@@ -13,12 +13,13 @@ connection = pymysql.connect(
 def get_room():
     input_id = get_input()
     with connection.cursor() as cursor:
-        sql = "select * from `rooms` where `input_id`=%s"
+        sql = "select * from rooms where input_id=%s"
         cursor.execute(sql, (input_id,))
         rooms = cursor.fetchall()
-        if len(rooms) == 0:
-            return False
-        return rooms[0]["id"]
+    if len(rooms) == 0:
+        print "room not found!!"
+        return False
+    return rooms[0]
 
 
 # TODO: connect with devise
@@ -27,30 +28,42 @@ def get_input():
 
 
 def get_nfc():
-    tag_id = get_tag()
+    tag = get_tag()
     with connection.cursor() as cursor:
         sql = "select * from nfcs where tag_id=%s"
-        cursor.execute(sql, (tag_id,))
+        cursor.execute(sql, (tag["id"],))
         if len(cursor.fetchall()) == 0:
             insert_sql = "insert into nfcs (`tag_id`) values (%s)"
-            cursor.execute(insert_sql, (tag_id,))
+            cursor.execute(insert_sql, (tag["id"],))
             connection.commit()
-        cursor.execute(sql, (tag_id,))
-        return cursor.fetchone()["id"]
+        cursor.execute(sql, (tag["id"],))
+        return cursor.fetchone()
 
 
 # TODO: connect with devise
 def get_tag():
-    return raw_input()
+    tag_id = raw_input()
+    return {'id': tag_id}
 
 
-while True:
-    room_id = get_room()
-    if not room_id:
-        continue
-    nfc_id = get_nfc()
+def register_umbrella(room, nfc):
     with connection.cursor() as cursor:
-        sql = "insert into umbrellas (`room_id`, `nfc_id`, `in_room`) values (%s, %s, %s)"
-        cursor.execute(sql, (room_id, nfc_id, True))
+        sql = "insert into umbrellas (room_id, nfc_id, in_room) values (%s, %s, %s)"
+        cursor.execute(sql, (room["id"], nfc["id"], True))
     connection.commit()
-    print("success!")
+
+
+try:
+    while True:
+        room = get_room()
+        if not room:
+            print "-------------------------------"
+            continue
+        nfc = get_nfc()
+        register_umbrella(room, nfc)
+        print "success!"
+
+
+except KeyboardInterrupt:
+    print "\nexit"
+
