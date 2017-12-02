@@ -1,0 +1,13 @@
+#-*- coding:utf-8 -*-
+SQL_UP = u"""
+CREATE TABLE rooms (
+		id int(11) NOT NULL auto_increment,
+		input_id int(11),
+		output_id int(11),
+		PRIMARY KEY (id)
+);
+"""
+
+SQL_DOWN = u"""
+DROP TABLE rooms;
+"""

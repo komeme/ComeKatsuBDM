@@ -1,0 +1,12 @@
+#-*- coding:utf-8 -*-
+SQL_UP = u"""
+CREATE TABLE nfcs (
+	id int(11) NOT NULL auto_increment,
+	tag_id varchar(255) NOT NULL,
+	PRIMARY KEY (id)
+);
+"""
+
+SQL_DOWN = u"""
+DROP TABLE nfcs;
+"""

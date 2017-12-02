@@ -1,0 +1,18 @@
+#-*- coding:utf-8 -*-
+SQL_UP = u"""
+CREATE TABLE umbrellas (
+		id int(11) NOT NULL auto_increment,
+		in_room boolean default false,
+		nfc_id int(11),
+		room_id int(11),
+		index(nfc_id),
+		index(room_id),
+		FOREIGN key (nfc_id) REFERENCES nfcs (id),
+		FOREIGN key (room_id) REFERENCES rooms (id),
+		PRIMARY KEY (id)
+);
+"""
+
+SQL_DOWN = u"""
+DROP TABLE umbrellas;
+"""
