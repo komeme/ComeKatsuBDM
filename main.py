@@ -95,6 +95,7 @@ def prepare():
         GPIO.setup(room["locked_led_port"], GPIO.OUT)
         GPIO.setup(room["unlocked_led_port"], GPIO.OUT)
         GPIO.setup(room["switch_port"], GPIO.IN)
+        led.turn_off(room)
 
 
 try:
