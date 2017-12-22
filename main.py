@@ -114,7 +114,7 @@ try:
     while True:
         tapped_tag_id = reader.read()
         registered_nfc = get_registered_nfc(tapped_tag_id)
-        if umbrella_in_room_exists(registered_nfc) is not False:
+        if registered_nfc is not False and umbrella_in_room_exists(registered_nfc):
             unlock(registered_nfc)
         else:
             register_nfc(tapped_tag_id)
