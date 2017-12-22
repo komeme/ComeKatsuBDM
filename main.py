@@ -84,6 +84,7 @@ def register(nfc):
 
 
 def prepare():
+    # gpio
     GPIO.setmode(GPIO.BCM)
     with connection.cursor() as cursor:
         sql = "select * from rooms"
@@ -97,9 +98,10 @@ def prepare():
 
 try:
     prepare()
+    reader = tag.TagReager()
     while True:
 	print "start!"
-        tapped_tag_id = tag.read()
+        tapped_tag_id = reader.read()
         registered_nfc = get_registered_nfc(tapped_tag_id)
         if registered_nfc is not False:
             unlock(registered_nfc)

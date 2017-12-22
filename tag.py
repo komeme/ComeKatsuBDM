@@ -17,9 +17,4 @@ class TagReager(object):
 
     def read(self):
         self.clf.connect(rdwr=self.rdwr_option)
-
-
-def read():
-    reader = TagReager()
-    reader.read()
-    return reader.tag_id
+        return self.tag_id
