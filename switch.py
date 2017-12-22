@@ -26,11 +26,11 @@ def put():
     would_occupied = [i in occupied_rooms for i in range(len(rooms_info))]
 
     for i in range(200):
-        for j in range(len(rooms_info)):
-            if (GPIO.input(rooms_info[j]['switch_port']) == GPIO.HIGH) != would_occupied[j]:
+        for room_info in rooms_info:
+            if (GPIO.input(room_info['switch_port']) == GPIO.HIGH) != would_occupied[room_info["id"]]:
                 with connection.cursor() as cursor:
                     sql = "select * from rooms where id = %s"
-                    cursor.execute(sql, (j,))
+                    cursor.execute(sql, (room_info["id"],))
                     return cursor.fetchone()
         time.sleep(0.1)
 
@@ -60,9 +60,9 @@ def take(room):
     would_occupied = [i in occupied_rooms for i in range(len(rooms_info))]
 
     for i in range(200):
-        for j in range(len(rooms_info)):
-            if (GPIO.input(rooms_info[j]['switch_port']) == GPIO.HIGH) != would_occupied[j]:
-                if j == room["id"]:
+        for room_info in rooms_info:
+            if (GPIO.input(room_info['switch_port']) == GPIO.HIGH) != would_occupied[room_info["id"]]:
+                if room_info["id"] == room["id"]:
                     return True
         time.sleep(0.1)
     return False
