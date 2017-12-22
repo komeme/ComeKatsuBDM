@@ -1,5 +1,6 @@
 import pymysql.cursors
 import led
+import tag
 
 connection = pymysql.connect(
         user='root',
@@ -46,9 +47,8 @@ def register_nfc(tag):
     connection.commit()
 
 
-# TODO: connect with devise
 def get_tag():
-    tag_id = raw_input()
+    tag_id = tag.read()
     return {'id': tag_id}
 
 

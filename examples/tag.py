@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import nfc
+import tag
 import binascii
 
 def start_up(targets):
@@ -19,7 +19,7 @@ def on_release(tag):
     return True
 
 def main():
-    with nfc.ContactlessFrontend('usb') as clf:
+    with tag.ContactlessFrontend('usb') as clf:
         rdwr_option = {'on-startup': start_up,
                        'on-connect': on_connect,
                        'on-release': on_release,

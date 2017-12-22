@@ -34,9 +34,9 @@ import hmac, hashlib
 
 from cli import CommandLineInterface
 
-import nfc
-import nfc.clf
-import nfc.ndef
+import tag
+import tag.clf
+import tag.ndef
 
 def parse_version(string):
     try: major_version, minor_version = map(int, string.split('.'))
@@ -360,7 +360,7 @@ class TagTool(CommandLineInterface):
             print("This Tag is not writeable.")
             return
 
-        new_ndef_message = nfc.ndef.Message(self.options.data)
+        new_ndef_message = tag.ndef.Message(self.options.data)
         if new_ndef_message == tag.ndef.message:
             print("The Tag already contains the message to write.")
             return

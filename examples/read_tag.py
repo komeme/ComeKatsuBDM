@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import nfc
+import tag
 import binascii
 
 def on_connect(tag):
@@ -9,7 +9,7 @@ def on_connect(tag):
     print binascii.hexlify(tag.identifier).upper()
 
 def main():
-    with nfc.ContactlessFrontend('usb') as clf:
+    with tag.ContactlessFrontend('usb') as clf:
         clf.connect(rdwr={'on-connect': on_connect})
 
 if __name__ == '__main__':

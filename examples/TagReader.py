@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import nfc
+import tag
 import binascii
 
 
@@ -8,7 +8,7 @@ class TagReager(object):
     def __init__(self):
         self.state = 0
         self.tag_id = 0
-        self.clf = nfc.ContactlessFrontend('usb')
+        self.clf = tag.ContactlessFrontend('usb')
         self.rdwr_option = {'on-startup': self.start_up,
                             'on-connect': self.on_connect,
                             'on-release': self.on_release,
