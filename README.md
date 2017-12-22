@@ -5,6 +5,8 @@
 - simple-db-migrate
 - nfcpy
 - PyMySQL
+- pyserial
+- Rpi.GPIO
 
 ## db setup
 ```
