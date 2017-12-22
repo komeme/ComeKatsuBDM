@@ -83,6 +83,17 @@ def register(nfc):
     print "umbrella is successfully registered"
 
 
+def umbrella_in_room_exists(nfc):
+    with connection.cursor() as cursor:
+        sql = "select * from umbrellas where nfc_id=%s"
+        cursor.execute(sql, (nfc["id"],))
+        umbrella = cursor.fetchone()
+    if umbrella:
+        return True
+    else:
+        return False
+
+
 def prepare():
     # gpio
     GPIO.setmode(GPIO.BCM)
@@ -103,7 +114,7 @@ try:
     while True:
         tapped_tag_id = reader.read()
         registered_nfc = get_registered_nfc(tapped_tag_id)
-        if registered_nfc is not False:
+        if umbrella_in_room_exists(registered_nfc) is not False:
             unlock(registered_nfc)
         else:
             register_nfc(tapped_tag_id)
