@@ -2,6 +2,7 @@ import pymysql.cursors
 import led
 import tag
 import switch
+import RPi.GPIO as GPIO
 
 connection = pymysql.connect(
         user='root',
@@ -82,7 +83,20 @@ def register(nfc):
     print "umbrella is successfully registered"
 
 
+def prepare():
+    GPIO.setmode(GPIO.BCM)
+    with connection.cursor() as cursor:
+        sql = "select * from rooms"
+        cursor.execute(sql)
+        rooms = cursor.fetchall()
+    for room in rooms:
+        GPIO.setup(room["locked_led_port"], GPIO.OUT)
+        GPIO.setup(room["unlocked_led_port"], GPIO.OUT)
+        GPIO.setup(room["switch_port"], GPIO.IN)
+
+
 try:
+    prepare()
     while True:
         tapped_tag_id = tag.read()
         registered_nfc = get_registered_nfc(tapped_tag_id)
