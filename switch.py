@@ -62,5 +62,3 @@ def take(room_id):
                     return True
         time.sleep(0.1)
     return False
-
-
