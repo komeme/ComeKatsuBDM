@@ -1,4 +1,4 @@
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import pymysql.cursors
 import time
 
@@ -30,10 +30,10 @@ def put():
             if (GPIO.input(rooms_info[j]['switch_port']) == GPIO.HIGH) != would_occupied[j]:
                 return j
         time.sleep(0.1)
-    return None
+    return False
 
 
-def take(room_id):
+def take(room):
     connection = pymysql.connect(
         user='root',
         passwd='root',
@@ -58,7 +58,7 @@ def take(room_id):
     for i in range(200):
         for j in range(len(rooms_info)):
             if (GPIO.input(rooms_info[j]['switch_port']) == GPIO.HIGH) != would_occupied[j]:
-                if j == room_id:
+                if j == room["id"]:
                     return True
         time.sleep(0.1)
     return False

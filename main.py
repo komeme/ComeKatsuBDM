@@ -1,6 +1,8 @@
 import pymysql.cursors
 import led
 import tag
+import switch
+import RPi.GPIO as GPIO
 
 connection = pymysql.connect(
         user='root',
@@ -10,18 +12,6 @@ connection = pymysql.connect(
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
         )
-
-
-def get_room():
-    switch_port = get_input()
-    with connection.cursor() as cursor:
-        sql = "select * from rooms where switch_port=%s"
-        cursor.execute(sql, (switch_port,))
-        rooms = cursor.fetchall()
-    if len(rooms) == 0:
-        print "room not found!!"
-        return False
-    return rooms[0]
 
 
 def get_registered_room(umbrella):
@@ -35,21 +25,11 @@ def get_registered_room(umbrella):
     return rooms[0]
 
 
-# TODO: connect with devise
-def get_input():
-    return input()
-
-
-def register_nfc(tag):
+def register_nfc(tag_id):
     with connection.cursor() as cursor:
         insert_sql = "insert into nfcs (`tag_id`) values (%s)"
-        cursor.execute(insert_sql, (tag["id"],))
+        cursor.execute(insert_sql, (tag_id,))
     connection.commit()
-
-
-def get_tag():
-    tag_id = tag.read()
-    return {'id': tag_id}
 
 
 def get_registered_umbrella(nfc):
@@ -60,39 +40,36 @@ def get_registered_umbrella(nfc):
     return umbrellas[0]
 
 
-def get_registered_nfc(tag):
+def get_registered_nfc(tag_id):
     with connection.cursor() as cursor:
         sql = "select * from nfcs where tag_id=%s"
-        cursor.execute(sql, (tag["id"],))
+        cursor.execute(sql, (tag_id,))
         nfcs = cursor.fetchall()
     if len(nfcs) == 0:
         return False
     return nfcs[0]
 
 
-def wait_for_umbrella_fetched(umbrella):
-    print "fetched!"
-    return True
-
-
 def unlock(nfc):
     umbrella = get_registered_umbrella(nfc)
     room = get_registered_room(umbrella)
     led.locked(room)
-    if wait_for_umbrella_fetched(umbrella):
+    if switch.take(room):
         with connection.cursor() as cursor:
             sql = "update umbrellas set in_room=%s where id=%s"
             cursor.execute(sql, (False, umbrella["id"]))
         connection.commit()
-        led.turn_off()
+        led.turn_off(room)
         print "umbrella is successfully fetched"
     else:
-        led.locked()
+        led.locked(room)
         print "umbrella is not fetched"
 
 
 def register(nfc):
-    room = get_room()
+    room = switch.put()
+    if room is False:
+        return
     with connection.cursor() as cursor:
         sql = "insert into umbrellas (room_id, nfc_id, in_room) values (%s, %s, %s)"
         cursor.execute(sql, (room["id"], nfc["id"], True))
@@ -106,15 +83,28 @@ def register(nfc):
     print "umbrella is successfully registered"
 
 
+def prepare():
+    GPIO.setmode(GPIO.BCM)
+    with connection.cursor() as cursor:
+        sql = "select * from rooms"
+        cursor.execute(sql)
+        rooms = cursor.fetchall()
+    for room in rooms:
+        GPIO.setup(room["locked_led_port"], GPIO.OUT)
+        GPIO.setup(room["unlocked_led_port"], GPIO.OUT)
+        GPIO.setup(room["switch_port"], GPIO.IN)
+
+
 try:
+    prepare()
     while True:
-        tapped_tag = get_tag()
-        registered_nfc = get_registered_nfc(tapped_tag)
-        if registered_nfc:
+        tapped_tag_id = tag.read()
+        registered_nfc = get_registered_nfc(tapped_tag_id)
+        if registered_nfc is not False:
             unlock(registered_nfc)
         else:
-            register_nfc(tapped_tag)
-            registered_nfc = get_registered_nfc(tapped_tag)
+            register_nfc(tapped_tag_id)
+            registered_nfc = get_registered_nfc(tapped_tag_id)
             register(registered_nfc)
         print "--------------------"
 
