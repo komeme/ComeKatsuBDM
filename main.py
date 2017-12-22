@@ -107,7 +107,8 @@ try:
         if registered_nfc is not False and umbrella_in_room_exists(registered_nfc):
             unlock(registered_nfc)
         else:
-            register_nfc(tapped_tag_id)
+            if registered_nfc is False:
+                register_nfc(tapped_tag_id)
             registered_nfc = get_registered_nfc(tapped_tag_id)
             register(registered_nfc)
         print "--------------------"
