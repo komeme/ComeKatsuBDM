@@ -4,6 +4,8 @@ import subprocess
 
 
 def play_sound(filename):
-    # 音源を再生する関数
     #subprocess.call("play " + filename, shell=True)
-    ｃ
+    subprocess.call("aplay " + filename, shell=True)
+
+filename = "se7.wav"
+play_sound(filename)
