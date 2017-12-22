@@ -53,7 +53,7 @@ def get_registered_nfc(tag_id):
 def unlock(nfc):
     umbrella = get_registered_umbrella(nfc)
     room = get_registered_room(umbrella)
-    led.locked(room)
+    led.unlocked(room)
     if switch.take(room):
         with connection.cursor() as cursor:
             sql = "update umbrellas set in_room=%s where id=%s"
