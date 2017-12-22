@@ -21,7 +21,7 @@ def put():
     with connection.cursor() as cursor:
         sql = "select room_id from umbrellas where in_room = true"
         cursor.execute(sql)
-        occupied_rooms = cursor.fetchall()
+        occupied_rooms = [room["room_id"] for room in cursor.fetchall()]
 
     would_occupied = [i in occupied_rooms for i in range(len(rooms_info))]
 
@@ -55,7 +55,7 @@ def take(room):
     with connection.cursor() as cursor:
         sql = "select room_id from umbrellas where in_room = true"
         cursor.execute(sql)
-        occupied_rooms = cursor.fetchall()
+        occupied_rooms = [room["room_id"] for room in cursor.fetchall()]
 
     would_occupied = [i in occupied_rooms for i in range(len(rooms_info))]
 
