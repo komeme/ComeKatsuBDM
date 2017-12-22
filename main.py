@@ -3,6 +3,7 @@ import led
 import tag
 import switch
 import RPi.GPIO as GPIO
+import sound
 
 connection = pymysql.connect(
         user='root',
@@ -101,6 +102,7 @@ def prepare():
 try:
     prepare()
     reader = tag.TagReader()
+    sound.touch_sound()
     print "start!"
     while True:
         tapped_tag_id = reader.read()
