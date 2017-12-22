@@ -60,11 +60,11 @@ def register_umbrella(room, nfc):
 
 try:
     while True:
+        nfc = get_nfc()
         room = get_room()
         if not room:
             print "-------------------------------"
             continue
-        nfc = get_nfc()
         register_umbrella(room, nfc)
         print "success!"
 
