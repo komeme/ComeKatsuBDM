@@ -11,10 +11,10 @@ connection = pymysql.connect(
 
 
 def get_room():
-    input_id = get_input()
+    switch_port = get_input()
     with connection.cursor() as cursor:
-        sql = "select * from rooms where input_id=%s"
-        cursor.execute(sql, (input_id,))
+        sql = "select * from rooms where switch_port=%s"
+        cursor.execute(sql, (switch_port,))
         rooms = cursor.fetchall()
     if len(rooms) == 0:
         print "room not found!!"
