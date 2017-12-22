@@ -30,14 +30,14 @@ for i in range(num_rooms):
 
 while True:
     with connection.cursor() as cursor:
-        sql = "select * from umbrellas where in_room = true"
+        sql = "select room_id from umbrellas where in_room = true"
         cursor.execute(sql)
         occupied_rooms = cursor.fetchall()
 
     would_occupied = [i in occupied_rooms for i in range(num_rooms)]
 
     for i in range(num_rooms):
-        if (GPIO.input(rooms_info[i]['switch_port']) == GPIO.LOW ) == would_occupied[i]:
+        if (GPIO.input(rooms_info[i]['switch_port']) == GPIO.HIGH) == would_occupied[i]:
             pass
         else:
             if flag != i:
