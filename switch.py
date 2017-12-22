@@ -46,10 +46,14 @@ def put():
         cursor.execute(sql)
         rooms = cursor.fetchall()
 
+<<<<<<< HEAD
     empty_rooms = []
     for room in rooms:
         if all([room != occupied_room for occupied_room in occupied_rooms]):
             empty_rooms.append(room)
+=======
+    empty_rooms = list(set(rooms) - set(occupied_rooms))
+>>>>>>> aa53809638f1cc341a74765c18f96d4768594bbb
 
     for i in range(200):
         for empty_room in empty_rooms:
