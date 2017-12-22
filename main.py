@@ -84,6 +84,7 @@ def register(nfc):
 
 try:
     while True:
+	print "start!"
         tapped_tag_id = tag.read()
         registered_nfc = get_registered_nfc(tapped_tag_id)
         if registered_nfc is not False:
