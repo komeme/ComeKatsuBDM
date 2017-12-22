@@ -8,9 +8,10 @@ class TagReager(object):
     def __init__(self):
         self.state = 0
         self.tag_id = 0
+        self.clf = nfc.ContactlessFrontend('usb')
         self.rdwr_option = {'on-startup': self.start_up,
                             'on-connect': self.on_connect,
-                            'on-release': self.on_release
+                            'on-release': self.on_release,
                             }
 
     """
@@ -41,9 +42,8 @@ class TagReager(object):
         return True
 
     def read(self):
-        clf = nfc.ContactlessFrontend('usb')
-        clf.connect(rdwr=self.rdwr_option)
-
+        #clf = nfc.ContactlessFrontend('usb')
+        tag = self.clf.connect(rdwr=self.rdwr_option)
 
 if __name__ == '__main__':
     reader = TagReager()
