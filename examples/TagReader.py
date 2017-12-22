@@ -34,6 +34,7 @@ class TagReager(object):
         print "tag_id : ", binascii.hexlify(tag.identifier).upper()
         self.state = 2
         self.tag_id = binascii.hexlify(tag.identifier).upper()
+
         return True
 
     def on_release(self, tag):
