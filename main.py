@@ -36,8 +36,7 @@ def get_registered_umbrella(nfc):
     with connection.cursor() as cursor:
         sql = "select * from umbrellas where nfc_id=%s and in_room = True"
         cursor.execute(sql, (nfc["id"],))
-        umbrellas = cursor.fetchall()
-    return umbrellas[0]
+        return cursor.fetchone()
 
 
 def get_registered_nfc(tag_id):
