@@ -34,7 +34,7 @@ def register_nfc(tag_id):
 
 def get_registered_umbrella(nfc):
     with connection.cursor() as cursor:
-        sql = "select * from umbrellas where nfc_id=%s"
+        sql = "select * from umbrellas where nfc_id=%s and in_room = True"
         cursor.execute(sql, (nfc["id"],))
         umbrellas = cursor.fetchall()
     return umbrellas[0]
@@ -84,11 +84,7 @@ def register(nfc):
 
 
 def umbrella_in_room_exists(nfc):
-    with connection.cursor() as cursor:
-        sql = "select * from umbrellas where nfc_id=%s"
-        cursor.execute(sql, (nfc["id"],))
-        umbrella = cursor.fetchone()
-    if umbrella:
+    if get_registered_umbrella(nfc):
         return True
     else:
         return False
