@@ -21,10 +21,12 @@ $ db-migrate
     - tag_id
         - nfcから読み込める特有のID
 - rooms (傘立ての穴)
-    - input_id
-        - ラズパイのこのroomに対する入力ポートのID
-    - output_id
-        - ラズパイのこのroomに対する出力ポートのID
+    - switch_port
+        - スイッチのポート番号
+    - locked_led_port
+        - ルームが埋まってる時に光らせるLEDのポート番号
+    - unlocked_led_port
+        - 傘を取れる状態のときに光らせるLEDのポート番号
 
 ## example
 ### input.py
