@@ -4,7 +4,7 @@ import nfc
 import binascii
 
 
-class TagReager(object):
+class TagReader(object):
     def __init__(self):
         self.tag_id = 0
         self.clf = nfc.ContactlessFrontend('usb')

@@ -98,7 +98,7 @@ def prepare():
 
 try:
     prepare()
-    reader = tag.TagReager()
+    reader = tag.TagReader()
     print "start!"
     while True:
         tapped_tag_id = reader.read()
