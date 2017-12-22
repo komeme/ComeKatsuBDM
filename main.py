@@ -99,8 +99,8 @@ def prepare():
 try:
     prepare()
     reader = tag.TagReager()
+    print "start!"
     while True:
-	print "start!"
         tapped_tag_id = reader.read()
         registered_nfc = get_registered_nfc(tapped_tag_id)
         if registered_nfc is not False:
