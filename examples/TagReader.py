@@ -48,6 +48,5 @@ class TagReager(object):
 
 if __name__ == '__main__':
     reader = TagReager()
-    while True:
-        reader.read()
-        print reader.state
+    reader.read()
+    print reader.state
