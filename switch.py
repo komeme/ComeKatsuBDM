@@ -29,7 +29,7 @@ def put():
         for j in range(len(rooms_info)):
             if (GPIO.input(rooms_info[j]['switch_port']) == GPIO.HIGH) != would_occupied[j]:
                 with connection.cursor() as cursor:
-                    sql = "select room from rooms where id = %s"
+                    sql = "select * from rooms where id = %s"
                     cursor.execute(sql, (j,))
                     return cursor.fetchone()
         time.sleep(0.1)
