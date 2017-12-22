@@ -25,7 +25,7 @@ def put():
 
     empty_rooms = []
     for room in rooms:
-        if all([room != occupied_room for occupied_room in occupied_rooms]):
+        if all([room["id"] != occupied_room["id"] for occupied_room in occupied_rooms]):
             empty_rooms.append(room)
 
     for i in range(200):
