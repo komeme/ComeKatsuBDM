@@ -1,4 +1,5 @@
 import pymysql.cursors
+import led
 
 connection = pymysql.connect(
         user='root',
@@ -77,18 +78,16 @@ def wait_for_umbrella_fetched(umbrella):
 def unlock(nfc):
     umbrella = get_registered_umbrella(nfc)
     room = get_registered_room(umbrella)
-    turn_off_locked_led(room)
-    turn_on_unlocked_led(room)
+    led.locked(room)
     if wait_for_umbrella_fetched(umbrella):
         with connection.cursor() as cursor:
             sql = "update umbrellas set in_room=%s where id=%s"
             cursor.execute(sql, (False, umbrella["id"]))
         connection.commit()
-        turn_off_unlocked_led(room)
+        led.turn_off()
         print "umbrella is successfully fetched"
     else:
-        turn_off_unlocked_led(room)
-        turn_on_locked_led(room)
+        led.locked()
         print "umbrella is not fetched"
 
 
@@ -103,24 +102,8 @@ def register(nfc):
         cursor.execute(sql, (nfc["id"],))
         umbrella = cursor.fetchone()
     room = get_registered_room(umbrella)
-    turn_on_locked_led(room)
+    led.locked(room)
     print "umbrella is successfully registered"
-
-
-def turn_on_locked_led(room):
-    print "turn on locked led"
-
-
-def turn_off_locked_led(room):
-    print "turn off locked led"
-
-
-def turn_on_unlocked_led(room):
-    print "turn on unlocked led"
-
-
-def turn_off_unlocked_led(room):
-    print "turn off unlocked led"
 
 
 try:
