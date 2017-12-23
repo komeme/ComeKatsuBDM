@@ -33,7 +33,7 @@ class UmbrellaStand(object):
 
     def wait_switch(self,time):
         for i in range(time):
-            
+
 
 
     def read_tag(self):
