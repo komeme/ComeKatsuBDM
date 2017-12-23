@@ -4,6 +4,9 @@ import tag
 import switch
 import RPi.GPIO as GPIO
 import sound
+import threading
+import time
+
 
 connection = pymysql.connect(
         user='root',
@@ -13,6 +16,39 @@ connection = pymysql.connect(
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
         )
+
+flag = -1
+
+class AlertThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+
+    def run(self):
+        with connection.cursor() as cursor:
+            sql = "select * from rooms"
+            cursor.execute(sql)
+            rooms = cursor.fetchall()
+
+        GPIO.setmode(GPIO.BCM)
+        for room in rooms:
+            GPIO.setup(room['switch_port'], GPIO.IN)
+
+        while True:
+            with connection.cursor() as cursor:
+                sql = "select * from rooms join umbrellas on rooms.id = umbrellas.room_id where umbrellas.in_room = true"
+                cursor.execute(sql)
+                occupied_rooms = cursor.fetchall()
+
+            empty_rooms = []
+            for room in rooms:
+                if all([room["id"] != occupied_room["id"] for occupied_room in occupied_rooms]):
+                    empty_rooms.append(room)
+
+            for empty_room in empty_rooms:
+                if GPIO.input(empty_room['switch_port']) == GPIO.LOW and flag != empty_room["id"]:
+                    sound.alert()
+
+            time.sleep(0.5)
 
 
 def get_registered_room(umbrella):
@@ -54,6 +90,7 @@ def unlock(nfc):
     umbrella = get_registered_umbrella(nfc)
     room = get_registered_room(umbrella)
     led.unlocked(room)
+    flag = room['id']
     if switch.take(room):
         with connection.cursor() as cursor:
             sql = "update umbrellas set in_room=%s where id=%s"
@@ -64,7 +101,7 @@ def unlock(nfc):
     else:
         led.locked(room)
         print "umbrella is not fetched"
-
+    flag = -1
 
 def register(nfc):
     room = switch.put()
@@ -100,6 +137,8 @@ def prepare():
 
 
 try:
+    at = AlertThread()
+    at.start()
     prepare()
     reader = tag.TagReader()
     print "start!"
