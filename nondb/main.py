@@ -1,17 +1,9 @@
-import pymysql.cursors
 import led
 import tag
 import switch
 import RPi.GPIO as GPIO
 
-connection = pymysql.connect(
-        user='root',
-        passwd='root',
-        host='localhost',
-        db='bdm_umbrella_stand',
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
-        )
+
 
 
 def get_registered_room(umbrella):
