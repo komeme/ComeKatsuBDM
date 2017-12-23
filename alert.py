@@ -1,7 +1,7 @@
 import pymysql.cursors
 import RPi.GPIO as GPIO
 import time
-import subprocess
+import sound
 
 flag = None
 
@@ -15,32 +15,27 @@ connection = pymysql.connect(
         )
 
 with connection.cursor() as cursor:
-    sql = "select COUNT(*) from rooms"
-    cursor.execute(sql)
-    num_rooms = cursor.fetchall()[0][u'COUNT(*)']
-
-with connection.cursor() as cursor:
     sql = "select * from rooms"
     cursor.execute(sql)
-    rooms_info = cursor.fetchall()
+    rooms = cursor.fetchall()
 
 GPIO.setmode(GPIO.BCM)
-for i in range(num_rooms):
-    GPIO.setup(rooms_info[i]['switch_port'], GPIO.IN)
+for room in rooms:
+    GPIO.setup(room['switch_port'], GPIO.IN)
 
 while True:
     with connection.cursor() as cursor:
-        sql = "select room_id from umbrellas where in_room = true"
+        sql = "select * from rooms join umbrellas on rooms.id = umbrellas.room_id where umbrellas.in_room = true"
         cursor.execute(sql)
         occupied_rooms = cursor.fetchall()
 
-    would_occupied = [i in occupied_rooms for i in range(num_rooms)]
+    empty_rooms = []
+    for room in rooms:
+        if all([room["id"] != occupied_room["id"] for occupied_room in occupied_rooms]):
+            empty_rooms.append(room)
 
-    for i in range(num_rooms):
-        if (GPIO.input(rooms_info[i]['switch_port']) == GPIO.HIGH) == would_occupied[i]:
-            pass
-        else:
-            if flag != i:
-                subprocess.call("aplay alert.mp3", shell=True)
+    for empty_room in empty_rooms:
+        if GPIO.input(empty_room['switch_port']) == GPIO.LOW and flag != empty_room["id"]:
+            sound.alert()
 
-    time.sleep(0.1)
+    time.sleep(0.5)
