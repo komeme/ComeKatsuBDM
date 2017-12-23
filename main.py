@@ -143,7 +143,6 @@ try:
     print "start!"
     while True:
         tapped_tag_id = reader.read()
-        sound.touch_sound()
         registered_nfc = get_registered_nfc(tapped_tag_id)
         if registered_nfc is not False and umbrella_in_room_exists(registered_nfc):
             unlock(registered_nfc)
