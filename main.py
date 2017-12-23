@@ -39,16 +39,15 @@ class AlertThread(threading.Thread):
                 cursor.execute(sql)
                 occupied_rooms = cursor.fetchall()
 
-            empty_rooms = []
-            for room in rooms:
-                if all([room["id"] != occupied_room["id"] for occupied_room in occupied_rooms]):
-                    empty_rooms.append(room)
-
-            for empty_room in empty_rooms:
-                if GPIO.input(empty_room['switch_port']) == GPIO.LOW and flag != empty_room["id"]:
+            for occupied_room in occupied_rooms:
+                if GPIO.input(occupied_room['switch_port']) == GPIO.LOW and flag != occupied_room["id"]:
                     sound.alert()
 
             time.sleep(0.5)
+
+    def stop(self):
+        self.stop_event.set()
+        self.thread.join()
 
 
 def get_registered_room(umbrella):
@@ -137,10 +136,10 @@ def prepare():
 
 
 try:
-    at = AlertThread()
-    at.start()
     prepare()
     reader = tag.TagReader()
+    at = AlertThread()
+    at.start()
     print "start!"
     while True:
         tapped_tag_id = reader.read()
@@ -157,4 +156,5 @@ try:
 
 
 except KeyboardInterrupt:
+    at.stop()
     print "\nexit"
