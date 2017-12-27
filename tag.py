@@ -2,6 +2,7 @@
 
 import nfc
 import binascii
+import sound
 
 
 class TagReader(object):
@@ -13,6 +14,7 @@ class TagReader(object):
     def on_connect(self, tag):
         print "tag_id : ", binascii.hexlify(tag.identifier).upper()
         self.tag_id = binascii.hexlify(tag.identifier).upper()
+        sound.touch_sound()
         return True
 
     def read(self):
