@@ -8,5 +8,6 @@ def play_sound(filename):
 def alert():
     subprocess.call("aplay assets/alert.wav", shell=True)
 
+
 def touch_sound():
     subprocess.call("aplay assets/touch.wav", shell=True)

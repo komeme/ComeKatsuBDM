@@ -1,3 +1,5 @@
+import subprocess
+
 import pymysql.cursors
 import led
 import tag
@@ -133,6 +135,8 @@ def prepare():
         GPIO.setup(room["unlocked_led_port"], GPIO.OUT)
         GPIO.setup(room["switch_port"], GPIO.IN)
         led.turn_off(room)
+    # sound
+    subprocess.call("sudo amixer cset numid=3 1", shell=True)
 
 
 try:
