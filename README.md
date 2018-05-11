@@ -1,10 +1,12 @@
 # ComeKatsuBDM
 
 ## 起動
-- ssh pi@{ip adress}
- - password: fukuoka
-- cd Develop/ComeKatsuBDM
-- python main.py
+```
+$ ssh pi@{ip adress}
+ password: fukuoka
+$ cd Develop/ComeKatsuBDM
+$ python main.py
+```
 
 ## トラブルシューティング
 - OperationalError: (2013, ‘Lost connection to MySQL server during query’)
