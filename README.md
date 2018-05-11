@@ -1,5 +1,15 @@
 # ComeKatsuBDM
 
+## 起動
+- ssh pi@{ip adress}
+ - password: fukuoka
+- cd Develop/ComeKatsuBDM
+- python main.py
+
+## トラブルシューティング
+- OperationalError: (2013, ‘Lost connection to MySQL server during query’)
+ - ctrl + Cでプロセスを落として再起動してください
+
 ## requirements
 - MySQL-python
 - simple-db-migrate
