@@ -2,26 +2,42 @@
 
 ## 五月祭展示してくれる人向けの説明書
 
-## 起動
+## 起動・接続
 1. ケーブルが正しく接続されているか確認
     - ステレオケーブル
     - Felica リーダー
-    - LANケーブル
 2. 電源ケーブルを接続してラズパイを起動
-3. ラズパイに接続されたPCから以下のコマンドを実行して接続
+3. PCをist_memberに接続する。
+4. ist_membersにつながっているラズパイのipアドレスを探す
+    - 以下のコマンドを実行
+    ```
+    sudo nmap  157.82.207.255/21 -sP | grep 00:22:CF:F5:9F:0D -2
+    ```
+    - 上のコマンドではMACアドレスが `00:22:CF:F5:9F:0D`であるマシンを検索している
+5. 上で得られた結果からipアドレスを読み取る
+    ```
+    Nmap scan report for (読み取るべきIPアドレス)
+    Host is up (0.0017s latency).
+    MAC Address: 00:22:CF:F5:9F:0D (Planex Communications)
+    Nmap scan report for (関係のないIPアドレス)
+    Host is up (0.0026s latency).
+    ```
+5. ist_membersに接続したPCから以下のコマンドを実行して接続
 ```
-$ ssh pi@{ip adress}
+$ ssh pi@{読み取ったIPアドレス}
  password: (別途共有します)
- ```
- - ssh に必要なpasswordは別途連絡します！
- 4. 接続できたら以下のコマンドを打って実行
+```
+- ssh に必要なpasswordは別途連絡します！
+
+## 実行
+1. ラズパイに接続できたら以下のコマンドを打って実行
  ```
 $ cd Develop/ComeKatsuBDM
 $ sudo python main.py
 ```
 - `sudo`コマンドを忘れないように！ 
 
-5. 使用後は `Ctrl` + `c` で終了
+2. 使用後は `Ctrl` + `c` で終了
 
 ## トラブルシューティング
 - OperationalError: (2013, ‘Lost connection to MySQL server during query’)
